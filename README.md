@@ -1,6 +1,7 @@
 ## Required dependencies
 
 npm install cors jsonwebtoken bcryptjs express mongodb
+
 npm install npm-run-all
 
 ### `npm start`
