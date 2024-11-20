@@ -8,7 +8,7 @@
 
 Create a folder then `npx create-react-app superstore` in VS Code. 
 
-Place the repository content in the folder, overwrite whatever is alreay there. 
+Place the repository content in the folder, overwrite whatever is already there. 
 
 Folder structure looks like below: 
 
