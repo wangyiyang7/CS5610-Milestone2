@@ -121,7 +121,7 @@ const ProfileComponent = () => {
                       setUserInfo({ ...userInfo, firstName: e.target.value })
                     }
                   />
-                </label>
+                </label><br />
                 <label>
                   Last Name:
                   <input
@@ -131,7 +131,7 @@ const ProfileComponent = () => {
                       setUserInfo({ ...userInfo, lastName: e.target.value })
                     }
                   />
-                </label>
+                </label><br />
                 <label>
                   Phone:
                   <input
@@ -141,7 +141,7 @@ const ProfileComponent = () => {
                       setUserInfo({ ...userInfo, phoneNumber: e.target.value })
                     }
                   />
-                </label>
+                </label><br />
                 <label>
                   Email:
                   <input
@@ -151,7 +151,7 @@ const ProfileComponent = () => {
                       setUserInfo({ ...userInfo, email: e.target.value })
                     }
                   />
-                </label>
+                </label><br />
                 <label>
                   Address:
                   <input
@@ -161,7 +161,7 @@ const ProfileComponent = () => {
                       setUserInfo({ ...userInfo, address: e.target.value })
                     }
                   />
-                </label>
+                </label><br />
                 <button onClick={() => handleSaveClick(userInfo)}>
                   Save Changes
                 </button>
