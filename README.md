@@ -1,10 +1,20 @@
 ## Required dependencies
 
-npm install cors jsonwebtoken bcryptjs express mongodb
+`npm install cors jsonwebtoken bcryptjs express mongodb`
 
-npm install npm-run-all
+`npm install npm-run-all`
 
-### `npm start`
+## Set up and run
+
+Create a folder then `npx create-react-app superstore` in VS Code. 
+
+Place the repo content in the folder, overwrite whatever is alreay there. 
+
+Folder structure looks like below: 
+![image](https://github.com/user-attachments/assets/5f095a6d-b125-4b06-b72c-c8a132ddfe10)
+
+
+
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
