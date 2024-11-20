@@ -41,7 +41,7 @@ const ProfileComponent = () => {
   }, [accountId]);
 
   const mapRef = useRef(null);
-  /*
+  
   useEffect(() => {
     const map = new atlas.Map(mapRef.current, {
       center: [-123.11544, 49.28078],
@@ -63,7 +63,7 @@ const ProfileComponent = () => {
     });
 
     return () => map.dispose();
-  }, []);*/
+  }, []);
 
   return (
     <div>
