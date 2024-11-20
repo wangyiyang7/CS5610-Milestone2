@@ -6,25 +6,24 @@ import "./atlas.min.css";
 const ProfileComponent = () => {
   const [userInfo, setUserInfo] = useState({});
   const [orderHistory, setOrderHistory] = useState([]);
+  const [isEditing, setIsEditing] = useState(false); // For toggling edit mode
   const { accountId } = useParams();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        //console.log(token);
+        const userToken = localStorage.getItem("token");
         const userResponse = await fetch(
           `http://localhost:5001/profile/${accountId}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "x-access-token": token,
+              "x-access-token": userToken,
             },
           }
         );
         const userData = await userResponse.json();
-        // console.log(userData);
         setUserInfo(userData);
 
         const orderResponse = await fetch(
@@ -40,8 +39,33 @@ const ProfileComponent = () => {
     fetchUserData();
   }, [accountId]);
 
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = async (updatedInfo) => {
+    const saveToken = localStorage.getItem("token");
+    const response = await fetch(
+      `http://localhost:5001/profile/${accountId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": saveToken,
+        },
+        body: JSON.stringify(updatedInfo),
+      }
+    );
+    if (response.ok) {
+      setUserInfo(updatedInfo);
+      setIsEditing(false); // Exit edit mode
+    } else {
+      console.error("Error updating profile");
+    }
+  };
+
   const mapRef = useRef(null);
-  
+
   useEffect(() => {
     const map = new atlas.Map(mapRef.current, {
       center: [-123.11544, 49.28078],
@@ -79,7 +103,6 @@ const ProfileComponent = () => {
                 <Link to={`/profile/${userInfo.accountId}/order-history`}>
                   Order History
                 </Link>
-                {/*</li><---a href="#order-history">Order History</a--->*/}
               </li>
             </ul>
           </nav>
@@ -87,17 +110,75 @@ const ProfileComponent = () => {
         <div className="user-profile__content">
           <div id="personal-info" className="user-profile__personal-info">
             <h2>Personal Information</h2>
-            <p>
-              Name: {userInfo.firstName} {userInfo.lastName}
-            </p>
-            <p>Phone: {userInfo.phoneNumber}</p>
-            <p>Email: {userInfo.email}</p>
-            <p>Address: {userInfo.address}</p>
+            {isEditing ? (
+              <div>
+                <label>
+                  First Name:
+                  <input
+                    type="text"
+                    defaultValue={userInfo.firstName}
+                    onChange={(e) =>
+                      setUserInfo({ ...userInfo, firstName: e.target.value })
+                    }
+                  />
+                </label>
+                <label>
+                  Last Name:
+                  <input
+                    type="text"
+                    defaultValue={userInfo.lastName}
+                    onChange={(e) =>
+                      setUserInfo({ ...userInfo, lastName: e.target.value })
+                    }
+                  />
+                </label>
+                <label>
+                  Phone:
+                  <input
+                    type="text"
+                    defaultValue={userInfo.phoneNumber}
+                    onChange={(e) =>
+                      setUserInfo({ ...userInfo, phoneNumber: e.target.value })
+                    }
+                  />
+                </label>
+                <label>
+                  Email:
+                  <input
+                    type="email"
+                    defaultValue={userInfo.email}
+                    onChange={(e) =>
+                      setUserInfo({ ...userInfo, email: e.target.value })
+                    }
+                  />
+                </label>
+                <label>
+                  Address:
+                  <input
+                    type="text"
+                    defaultValue={userInfo.address}
+                    onChange={(e) =>
+                      setUserInfo({ ...userInfo, address: e.target.value })
+                    }
+                  />
+                </label>
+                <button onClick={() => handleSaveClick(userInfo)}>
+                  Save Changes
+                </button>
+              </div>
+            ) : (
+              <div>
+                <p>
+                  Name: {userInfo.firstName} {userInfo.lastName}
+                </p>
+                <p>Phone: {userInfo.phoneNumber}</p>
+                <p>Email: {userInfo.email}</p>
+                <p>Address: {userInfo.address}</p>
+              </div>
+            )}
           </div>
           <div>
-            <Link>
-              <button>Edit</button>
-            </Link>
+            <button onClick={handleEditClick}>Edit</button>
           </div>
         </div>
         <div

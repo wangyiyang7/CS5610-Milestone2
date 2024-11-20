@@ -213,3 +213,42 @@ app.get("/order/:accountId", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
+app.put("/profile/:accountId", async (req, res) => {
+  const token = req.headers["x-access-token"];
+  if (!token) {
+    return res.status(403).send({ message: "No token provided!" });
+  }
+
+  try {
+    const decoded = await verifyToken(token, SECRET_KEY);
+    const { accountId } = req.params;
+    const { email, firstName, lastName, address, phoneNumber } = req.body;
+
+    const db = await getDB();
+    const collection = await db.collection("user");
+    const result = await collection.updateOne(
+      { accountId: accountId },
+      {
+        $set: {
+          email,
+          firstName,
+          lastName,
+          address,
+          phoneNumber,
+        },
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).send({ message: "User not found!" });
+    }
+
+    res.status(200).send({ message: "Profile updated successfully!" });
+  } catch (error) {
+    if (error.name === "JsonWebTokenError") {
+      return res.status(500).send({ message: "Failed to authenticate token." });
+    }
+    res.status(500).send({ message: "Error updating profile" });
+  }
+});
