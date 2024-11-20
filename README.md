@@ -24,7 +24,7 @@ Application should be running:
 
 To view cart and user profile, the user should log in or register for the first time. 
 
-For any reason that failed, use wang.yiyang7@northeatern.edu and 123456 to log in.
+For any reason that failed, use wang.yiyang7@northeastern.edu and 123456 to log in.
 
 ## Database setup
 
