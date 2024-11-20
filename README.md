@@ -26,3 +26,7 @@ To view cart and user profile, the user should log in or register for the first 
 
 For any reason that failed, use wang.yiyang7@northeatern.edu and 123456 to log in.
 
+## Database setup
+
+Not necessary. My database is accessible to any IP. 
+
