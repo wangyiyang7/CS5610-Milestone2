@@ -1,5 +1,7 @@
 ## Required dependencies
 
+`npm install react-router-dom`
+
 `npm install cors jsonwebtoken bcryptjs express mongodb`
 
 `npm install npm-run-all`
