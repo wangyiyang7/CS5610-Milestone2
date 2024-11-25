@@ -148,15 +148,15 @@ app.get("/profile/:accountId", async (req, res) => {
   try {
     const decoded = await verifyToken(token, SECRET_KEY);
     const { accountId } = req.params;
-    console.log(accountId);
+    //console.log(accountId);
     const db = await getDB();
     const collection = await db.collection("user");
     const user = await collection.findOne({
       accountId: accountId,
     });
     res.status(200).send(user);
-    console.log(typeof accountId);
-    console.log(user);
+    //console.log(typeof accountId);
+    //console.log(user);
   } catch (error) {
     if (error.name === "JsonWebTokenError") {
       return res.status(500).send({ message: "Failed to authenticate token." });
@@ -191,7 +191,7 @@ app.post("/order/:accountId/:orderNumber", async (req, res) => {
 
 app.get("/order/:accountId", async (req, res) => {
   const { accountId } = req.params;
-  console.log(accountId);
+  //console.log(accountId);
 
   const token = req.headers["x-access-token"];
   if (!token) {
@@ -208,7 +208,7 @@ app.get("/order/:accountId", async (req, res) => {
       .limit(5)
       .toArray();
     res.status(200).json(orders);
-    console.log(orders);
+    //console.log(orders);
   } catch (error) {
     console.error("Error fetching orders:", error);
     res.status(500).send("Failed to fetch orders. Please try again.");
