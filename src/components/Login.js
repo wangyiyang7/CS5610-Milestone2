@@ -20,9 +20,10 @@ const LoginComponent = () => {
         body: JSON.stringify({ email: email, password: password }),
       });
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
       if (response.ok) {
-        console.log(`Welcome! Account ID: ${data.accountId}`);
+        //console.log(`Welcome! Account ID: ${data.accountId}`);
+        //console.log(`Welcome! User Token: ${data.tkn}`);
         login(data.tkn, data.accountId);
         navigate(`/profile/${data.accountId}`);
       } else {

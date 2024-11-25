@@ -12,12 +12,20 @@ const OrderHistoryComponent = () => {
     const fetchUserData = async () => {
       const accountId = localStorage.getItem("accountId");
       try {
+        const userToken = localStorage.getItem("token");
         const orderResponse = await fetch(
-          `http://localhost:5001/order/${accountId}`
+          `http://localhost:5001/order/${accountId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "x-access-token": userToken,
+            },
+          }
         );
         const orderData = await orderResponse.json();
         setOrders(orderData);
-        console.log(orderData);
+        // console.log(orderData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

@@ -6,7 +6,7 @@ function CartComponent() {
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(storedCart);
-    console.log(localStorage.getItem("token"));
+    //(localStorage.getItem("token"));
   }, []);
 
   const plus = (id) => {

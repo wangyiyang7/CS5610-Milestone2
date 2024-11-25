@@ -515,6 +515,27 @@ a {
   margin-bottom: 20px;
 }
 
+.user-profile__personal-info label {
+  display: inline-block;
+  text-align: right;
+  width: 90px;
+  margin-bottom: 5px;
+  margin-right: 15px;
+}
+
+.user-profile__personal-info input {
+  margin-top: 5px;
+  width: 200px;
+}
+
+.user-profile__personal-info textarea {
+  width: 200px;
+}
+
+.user-profile__personal-info button {
+  margin-top: 5px;
+}
+
 .user-profile__order-history {
   margin: 10%;
   margin-top: 5%;

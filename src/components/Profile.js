@@ -27,7 +27,14 @@ const ProfileComponent = () => {
         setUserInfo(userData);
 
         const orderResponse = await fetch(
-          `http://localhost:5001/order/${accountId}`
+          `http://localhost:5001/order/${accountId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "x-access-token": userToken,
+            },
+          }
         );
         const orderData = await orderResponse.json();
         setOrderHistory(orderData);
@@ -45,17 +52,14 @@ const ProfileComponent = () => {
 
   const handleSaveClick = async (updatedInfo) => {
     const saveToken = localStorage.getItem("token");
-    const response = await fetch(
-      `http://localhost:5001/profile/${accountId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": saveToken,
-        },
-        body: JSON.stringify(updatedInfo),
-      }
-    );
+    const response = await fetch(`http://localhost:5001/profile/${accountId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": saveToken,
+      },
+      body: JSON.stringify(updatedInfo),
+    });
     if (response.ok) {
       setUserInfo(updatedInfo);
       setIsEditing(false); // Exit edit mode
@@ -89,6 +93,28 @@ const ProfileComponent = () => {
     return () => map.dispose();
   }, []);
 
+  const handleDeleteOrder = async (id) => {
+    const newOrderHistory = orderHistory.filter(
+      (order) => order.orderNumber !== id
+    );
+    setOrderHistory(newOrderHistory);
+    try {
+      const userToken = localStorage.getItem("token");
+      const userResponse = await fetch(`http://localhost:5001/order/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": userToken,
+        },
+      });
+      if (userResponse.ok) {
+        alert(`Order ${id} deleted!`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div>
       <div className="user-profile">
@@ -112,56 +138,51 @@ const ProfileComponent = () => {
             <h2>Personal Information</h2>
             {isEditing ? (
               <div>
-                <label>
-                  First Name:
-                  <input
-                    type="text"
-                    defaultValue={userInfo.firstName}
-                    onChange={(e) =>
-                      setUserInfo({ ...userInfo, firstName: e.target.value })
-                    }
-                  />
-                </label><br />
-                <label>
-                  Last Name:
-                  <input
-                    type="text"
-                    defaultValue={userInfo.lastName}
-                    onChange={(e) =>
-                      setUserInfo({ ...userInfo, lastName: e.target.value })
-                    }
-                  />
-                </label><br />
-                <label>
-                  Phone:
-                  <input
-                    type="text"
-                    defaultValue={userInfo.phoneNumber}
-                    onChange={(e) =>
-                      setUserInfo({ ...userInfo, phoneNumber: e.target.value })
-                    }
-                  />
-                </label><br />
-                <label>
-                  Email:
-                  <input
-                    type="email"
-                    defaultValue={userInfo.email}
-                    onChange={(e) =>
-                      setUserInfo({ ...userInfo, email: e.target.value })
-                    }
-                  />
-                </label><br />
-                <label>
-                  Address:
-                  <input
-                    type="text"
-                    defaultValue={userInfo.address}
-                    onChange={(e) =>
-                      setUserInfo({ ...userInfo, address: e.target.value })
-                    }
-                  />
-                </label><br />
+                <label>First Name:</label>
+                <input
+                  type="text"
+                  defaultValue={userInfo.firstName}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, firstName: e.target.value })
+                  }
+                />
+                <br />
+                <label>Last Name:</label>
+                <input
+                  type="text"
+                  defaultValue={userInfo.lastName}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, lastName: e.target.value })
+                  }
+                />
+                <br />
+                <label>Phone:</label>
+                <input
+                  type="text"
+                  defaultValue={userInfo.phoneNumber}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, phoneNumber: e.target.value })
+                  }
+                />
+                <br />
+                <label>Email:</label>
+                <input
+                  type="email"
+                  defaultValue={userInfo.email}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, email: e.target.value })
+                  }
+                />
+                <br />
+                <label>Address:</label>
+                <textarea
+                  type="text"
+                  defaultValue={userInfo.address}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, address: e.target.value })
+                  }
+                />
+                <br />
                 <button onClick={() => handleSaveClick(userInfo)}>
                   Save Changes
                 </button>
@@ -197,6 +218,10 @@ const ProfileComponent = () => {
               <span>Order Number: {order.orderNumber}</span>
               <span> | </span>
               <span>Total: ${order.total.toFixed(2)}</span>
+              <span> | </span>
+              <button onClick={() => handleDeleteOrder(order.orderNumber)}>
+                Delete
+              </button>{" "}
             </li>
           ))}
         </ul>

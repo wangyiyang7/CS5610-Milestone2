@@ -16,7 +16,7 @@ const Navigation = () => {
     e.preventDefault();
     if (isAuthenticated) {
       navigate(`/profile/${accountId}`);
-      console.log(localStorage.getItem("token"));
+      //(localStorage.getItem("token"));
     } else {
       navigate(`/login`);
     }
@@ -35,6 +35,11 @@ const Navigation = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch();
+            }
+          }}
         />
         <button onClick={handleSearch}>Search</button>
       </div>
