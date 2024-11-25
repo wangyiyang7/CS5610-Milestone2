@@ -141,7 +141,6 @@ const verifyToken = (token, secret) => {
 
 app.get("/profile/:accountId", async (req, res) => {
   const token = req.headers["x-access-token"];
-  //console.log(token);
   if (!token) {
     return res.status(403).send({ message: "No token provided!" });
   }
@@ -194,13 +193,19 @@ app.get("/order/:accountId", async (req, res) => {
   const { accountId } = req.params;
   console.log(accountId);
 
+  const token = req.headers["x-access-token"];
+  if (!token) {
+    return res.status(403).send({ message: "No token provided!" });
+  }
+
   try {
+    const decoded = await verifyToken(token, SECRET_KEY);
     const db = await getDB();
     const collection = await db.collection("order");
     const orders = await collection
       .find({ accountId: accountId })
       .sort({ orderNumber: -1 })
-      .limit(3)
+      .limit(5)
       .toArray();
     res.status(200).json(orders);
     console.log(orders);
@@ -210,8 +215,22 @@ app.get("/order/:accountId", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+app.delete("/order/:orderNumber", async (req, res) => {
+  const { orderNumber } = req.params;
+  const token = req.headers["x-access-token"];
+  if (!token) {
+    return res.status(403).send({ message: "No token provided!" });
+  }
+
+  try {
+    const decoded = await verifyToken(token, SECRET_KEY);
+    const db = await getDB();
+    const collection = await db.collection("order");
+    const orders = await collection.deleteOne({ orderNumber: orderNumber });
+    res.status(200).send("Delete OK!");
+  } catch (error) {
+    res.status(404).send("Failed to delete orders.");
+  }
 });
 
 app.put("/profile/:accountId", async (req, res) => {
@@ -251,4 +270,8 @@ app.put("/profile/:accountId", async (req, res) => {
     }
     res.status(500).send({ message: "Error updating profile" });
   }
+});
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
