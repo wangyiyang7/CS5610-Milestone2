@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import * as atlas from "azure-maps-control";
 import "./atlas.min.css";
 
@@ -8,6 +8,7 @@ const ProfileComponent = () => {
   const [orderHistory, setOrderHistory] = useState([]);
   const [isEditing, setIsEditing] = useState(false); // For toggling edit mode
   const { accountId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -67,6 +68,24 @@ const ProfileComponent = () => {
       console.error("Error updating profile");
     }
   };
+
+  const handleDeleteAccount = async () => {
+    const deleteToken = localStorage.getItem("token");
+    const response = await fetch(`http://localhost:5001/profile/${accountId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": deleteToken,
+      },
+    });
+    if (response.ok) {
+      localStorage.removeItem("token");
+      navigate("/login");
+    } else {
+      console.error("Error deleting account");
+    }
+  };
+  
 
   const mapRef = useRef(null);
 
@@ -200,6 +219,7 @@ const ProfileComponent = () => {
           </div>
           <div>
             <button onClick={handleEditClick}>Edit</button>
+            <button onClick={handleDeleteAccount}>Delete Account</button>
           </div>
         </div>
         <div
