@@ -233,6 +233,32 @@ app.delete("/order/:orderNumber", async (req, res) => {
   }
 });
 
+app.delete("/profile/:accountId", async (req, res) => {
+  const { accountId } = req.params;
+  const token = req.headers["x-access-token"];
+
+  if (!token) {
+    return res.status(403).send({ message: "No token provided!" });
+  }
+
+  try {
+    const decoded = await verifyToken(token, SECRET_KEY);
+    const db = await getDB();
+    const collection = await db.collection("user");
+    const result = await collection.deleteOne({ accountId: accountId });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).send({ message: "User not found!" });
+    }
+
+    res.status(200).send({ message: "Account deleted successfully!" });
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    res.status(500).send({ message: "Failed to delete account" });
+  }
+});
+
+
 app.put("/profile/:accountId", async (req, res) => {
   const token = req.headers["x-access-token"];
   if (!token) {
