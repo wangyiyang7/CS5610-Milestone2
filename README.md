@@ -2,7 +2,7 @@
 
 `npm install react-router-dom`
 
-`npm install cors jsonwebtoken bcryptjs express mongodb`
+`npm install cors jsonwebtoken bcryptjs express mongodb azure-maps-control`
 
 `npm install npm-run-all`
 
